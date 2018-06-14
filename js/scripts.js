@@ -27,7 +27,8 @@ Player.prototype.pointsTotal = function () {
     }
   } else {
     this.score = 0
-    changePlayer();
+    this.changePlayer();
+    this.robotFunction();
   }
  return this.score
 }
@@ -41,7 +42,7 @@ $('#p1n').text(this.name);
 };
 
 
-function changePlayer () {
+Player.prototype.changePlayer = function() {
   $('#gotOne').toggle(500);
   $('#gotOne').delay(1400).toggle(200);
   $('#p1, #p1c').toggle(2000);
@@ -54,10 +55,41 @@ function clear() {
   $('#score').text('0')
 }
 
+Player.prototype.holdBits = function (data) {
+  this.score = data
+  this.runningtotal = 0
+  this.score = 0
+}
+
 Player.prototype.hold = function () {
   this.total = this.total + this.score;
   return this.total
 }
+
+
+function robotRoll() {
+  var rolls = 0
+  this.dieroll = Math.floor((Math.random() * 6) + 1)
+  rolls = (this.dieroll)
+}
+
+Player.prototype.robotFunction = function() {
+  var rolls = 0
+  this.dieroll = Math.floor((Math.random() * 6) + 1)
+  rolls = (this.dieroll)
+  if (this.dieroll !== 1) {
+    this.dieroll = Math.floor((Math.random() * 6) + 1)
+    rolls = (rolls + this.dieroll)
+    if (this.dieroll !== 1) {
+      this.dieroll = Math.floor((Math.random() * 6) + 1)
+      rolls = (rolls + this.dieroll)
+    $('#player2Score').text(rolls);
+  } else this.changePlayer();
+} else this.changePlayer();
+// } this.changePlayer();
+}
+
+
 
 $(document).ready(function() {
   if (confirm("Click OK to Play against Computer...")) {
@@ -82,15 +114,14 @@ $('#holdButton1, #holdButton2').click(function (event) {
     $('#p2, #p2c').toggle(300);
        if (this.id == 'holdButton1') {
           var data = player1.hold()
-          player1.score = data
-          player1.runningtotal = 0
-          player1.score = 0
+          player1.holdBits(data)
           $('#player1Score').text(data);
+          if (player2.robot === 1) {
+            player2.robotFunction()
+          }
        } else if (this.id == 'holdButton2') {
           var data = player2.hold()
-          player2.score = data
-          player2.runningtotal = 0
-          player2.score = 0
+          player2.holdBits(data)
           $('#player2Score').text(data);
        }
       clear();;
